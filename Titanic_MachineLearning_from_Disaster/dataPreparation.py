@@ -26,13 +26,13 @@ if __name__ == "__main__":
     data_train = pd.read_csv(dataPath+"train.csv",encoding="latin-1",low_memory=False)
     
     # Tasks
-        # data description. (dtypes,missing values,unique values, etc) --> beto
+        # data description. (dtypes,missing values,unique values, etc) --> deto
         # transform object to categorical.  --> beto
-        # set levels of some categorical variable that be important or make sense. ---> ivan
+        # set levels of some categorical variable that be important or make sense. --> ivan
         # handling missing values. --> beto
         # handling categorical values (convert categorical values to its respective code). --> ivan
         # Transform the data if required for the models.
-        # feature engineering to create new features. --> beto e Ivan
+        # feature engineering to create new features. --> beto e ivan
         
         
 # Some links:
