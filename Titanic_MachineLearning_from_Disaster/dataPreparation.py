@@ -26,7 +26,7 @@ if __name__ == "__main__":
     data_train = pd.read_csv(dataPath+"train.csv",encoding="latin-1",low_memory=False)
     
     # Tasks
-        # data description. (dtypes,missing values,unique values, etc) --> deto
+        # data description. (dtypes,missing values,unique values, etc) --> beto
         # transform object to categorical.  --> beto
         # set levels of some categorical variable that be important or make sense. --> ivan
         # handling missing values. --> beto
