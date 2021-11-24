@@ -17,13 +17,40 @@ panadas: 1.0.5
 """
 
 import pandas as pd
+from pandas_profiling import ProfileReport 
 
 # data folder  path
 dataPath = "./data/"
 
+def preliminar_analysis(data, profile_mode = False, data_name = "data_train"):
+    """ This is a function to perform a preliminary analysis of the data.
+    This function is intended to perform a preliminary analysis of the data.
+    The function returns a pandas_profiling report.
+            
+    return profile
+    
+    Args:
+        data: dataframe
+        profile_mode: boolean
+        data_name: string
+    return:
+        profile: pandas_profiling report
+    """
+    if(profile_mode):
+        profile = ProfileReport(data, title='Pandas Profiling Report')
+        profile.to_file(output_file='./reports/preliminary_analysis_'+data_name+'.html')
+    # Describe the data
+    print('shape of the data\n', data.shape)
+    print('\n')
+    print('description of pclass\n', data.describe().iloc[:,2:3])
+    print('\n')
+    print('count of missing data\n', data.isnull().sum())
+    print('\n')
+    print('examine the counts of sex\n', data.Sex.value_counts(dropna = False))
 
 if __name__ == "__main__":
     data_train = pd.read_csv(dataPath+"train.csv",encoding="latin-1",low_memory=False)
+    preliminar_analysis(data_train, profile_mode=True, data_name="data_train")
     
     # Tasks
         # data description. (dtypes,missing values,unique values, etc) --> beto
@@ -33,8 +60,8 @@ if __name__ == "__main__":
         # handling categorical values (convert categorical values to its respective code). --> ivan
         # Transform the data if required for the models.
         # feature engineering to create new features. --> beto e ivan
-        
-        
+    
+
 # Some links:
     """
     	-- 1) How to Handle Missing Data in Machine Learning: 5 Techniques (soruce: https://dev.acquia.com/blog/how-to-handle-missing-data-in-machine-learning-5-techniques/09/07/2018/19651)
