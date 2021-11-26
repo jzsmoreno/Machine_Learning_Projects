@@ -19,6 +19,7 @@ panadas: 1.0.5
 import pandas as pd
 from pandas_profiling import ProfileReport 
 import re
+from sklearn.impute import KNNImputer
 
 # data folder  path
 dataPath = "./data/"
@@ -80,8 +81,29 @@ def data_transform_name(data, codification):
             return codification["Other"]
         
     data["Title"] = data.Name.apply(lambda name: getTitle(name))
-    
+    return data
 
+# handle missing data with k-nearest neighbors
+def missing_values(data):
+    
+    # impute missing values with k-nearest neighbors
+    # using Pclass, Parch, Fare, Sex, Survive and Title to predict Age
+    def sex_encoding(sex):
+        # auxiliary function to encoding Sex
+        dic = {'male':1,
+        'female':2
+        }
+        return dic[sex]
+    
+    imputer = KNNImputer(n_neighbors=5, weights='uniform', metric='nan_euclidean')
+    X = data.drop(["PassengerId", "Name", "Ticket", "Cabin", "Embarked"], axis=1)
+    X["Sex"] = X.Sex.apply(lambda sex: sex_encoding(sex))
+    y = data.Age
+    new_cols = ['Age', 'Survived', 'Pclass', 'Sex', 'Parch', 'Fare', 'Title']
+    X = X[new_cols]
+    data["Age"] = imputer.fit_transform(X, y).astype('int')
+    
+    return data
 
 if __name__ == "__main__":
     data_train = pd.read_csv(dataPath+"train.csv",encoding="latin-1",low_memory=False)
@@ -99,10 +121,11 @@ if __name__ == "__main__":
                     "Dr" : 6,
                     "Other": 7} 
     
-    data_transform_name(data_train,codification)
-    
-    
-    
+    data = data_transform_name(data_train,codification)
+    # save data into csv file
+    data.to_csv(dataPath+"data_train_transformed.csv",index=False)
+    data = missing_values(data)
+    data.to_csv(dataPath+"data_train_transformed_missing_values.csv",index=False)
     
     # Tasks
         # data description. (dtypes,missing values,unique values, etc) --> beto
