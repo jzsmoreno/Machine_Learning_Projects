@@ -16,10 +16,12 @@ numpy: 1.18.5
 panadas: 1.0.5
 """
 
+import re
+import shelve
 import pandas as pd
 from pandas_profiling import ProfileReport 
-import re
 from sklearn.impute import KNNImputer
+
 
 # data folder  path
 dataPath = "./data/"
@@ -80,30 +82,82 @@ def data_transform_name(data, codification):
         else:
             return codification["Other"]
         
-    data["Title"] = data.Name.apply(lambda name: getTitle(name))
-    return data
+    data["Title_Name"] = data.Name.apply(lambda name: getTitle(name))
 
-# handle missing data with k-nearest neighbors
-def missing_values(data):
+
+
+def missing_values(data,col,features,n_neighbors=5,weights='uniform',metric='nan_euclidean',**kwargs):
     
-    # impute missing values with k-nearest neighbors
-    # using Pclass, Parch, Fare, Sex, Survive and Title to predict Age
-    def sex_encoding(sex):
-        # auxiliary function to encoding Sex
-        dic = {'male':1,
-        'female':2
-        }
-        return dic[sex]
+    """ This is a function to impute missing values with k-nearest neighbors.
+        In order to do the inputation, it must choose the column and features 
+        with numerical values.
     
-    imputer = KNNImputer(n_neighbors=5, weights='uniform', metric='nan_euclidean')
-    X = data.drop(["PassengerId", "Name", "Ticket", "Cabin", "Embarked"], axis=1)
-    X["Sex"] = X.Sex.apply(lambda sex: sex_encoding(sex))
-    y = data.Age
-    new_cols = ['Age', 'Survived', 'Pclass', 'Sex', 'Parch', 'Fare', 'Title']
+    Args:
+        data (Pandas DataFrame): dataframe
+        col (string): column to input missing values
+        features [list[string]]: features of k-nearest neighbors
+        n_neighbors (int): number of neighbors
+        weights (string): weight for each feature
+        metric (string): metric to use
+    return:
+        data (Pandas DataFrame): inputed column added to dataframe
+    
+    """
+        
+    imputer = KNNImputer(n_neighbors=n_neighbors, weights=weights, metric=metric,**kwargs)
+        
+    X = data[[col] + features]    
+    y = data[col]
+    
+    new_cols = [col] + features
     X = X[new_cols]
-    data["Age"] = imputer.fit_transform(X, y).astype('int')
     
-    return data
+    data[col] = imputer.fit_transform(X, y)
+    
+
+
+def object_to_categorical_or_numerical(data,col,order=None,toCode=True):
+    
+    """ This is a function to convert an object columns to categorical or numerical column
+    
+    Args:
+        data (Pandas DataFrame): dataframe
+        col (string): column to cast
+        order (tuple): order of the categories
+        toCode (bool): if true return the code of the categories
+    return:
+        data (Pandas DataFrame): inputed column added to dataframe
+    
+    """
+    
+    data[col] = data[col].astype("category")
+    if order:
+        data[col].cat.set_categories(order,ordered=True,inplace=True)
+    
+    if toCode:
+        data[col] = data[col].cat.codes
+    
+
+def to_save_to_load(data,path,save=True):
+    
+    """ This is a function to save or load pandas dataframe using shelve module
+    
+    Args:
+        data (Pandas DataFrame): dataframe to save 
+        path (string): Path where the object is or will be
+        save (bool): if true save the object 
+    return:
+        data (Pandas DataFrame): dataframe loaded
+    
+    """
+    
+    with shelve.open(path) as shelve_obj:
+        if save:
+            shelve_obj["data"] = data
+        else:
+            return shelve_obj["data"] 
+            
+
 
 if __name__ == "__main__":
     data_train = pd.read_csv(dataPath+"train.csv",encoding="latin-1",low_memory=False)
@@ -121,12 +175,28 @@ if __name__ == "__main__":
                     "Dr" : 6,
                     "Other": 7} 
     
-    data = data_transform_name(data_train,codification)
-    # save data into csv file
-    data.to_csv(dataPath+"data_train_transformed.csv",index=False)
-    data = missing_values(data)
-    data.to_csv(dataPath+"data_train_transformed_missing_values.csv",index=False)
+    data_transform_name(data_train,codification)
     
+    # lets cast object columns to categorical
+    object_to_categorical_or_numerical(data_train, "Sex")
+    # We have to input two missing values of Embarked, the missing values are coded 
+    # as -1.
+    object_to_categorical_or_numerical(data_train, "Embarked") 
+
+    # using Pclass, Parch, Fare, Sex, Survived and Title_Name to predict Age
+    missing_values(data_train,'Age',['Survived', 'Pclass', 'Sex', 'Parch', 'Fare', 'Title_Name'],
+                   n_neighbors=5,weights='uniform',metric='nan_euclidean')
+    
+    
+    """ To save a dataframe
+            Example: to_save_to_load(data_train,dataPath+"data_frame.db",save=True)
+        To load a dataframe
+            Example: data_train = to_save_to_load(None,dataPath+"data_frame.db",save=False)
+    """
+                    
+        
+    
+        
     # Tasks
         # data description. (dtypes,missing values,unique values, etc) --> beto
         # transform object to categorical.  --> beto
