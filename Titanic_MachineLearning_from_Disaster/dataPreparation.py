@@ -140,7 +140,7 @@ def object_to_categorical_or_numerical(data,col,order=None,toCode=True):
         data[col] = data[col].cat.codes
     
 
-def to_save_to_load(data,path,save=True):
+def to_save_or_load(data,path,save=True):
     
     """ This is a function to save or load pandas dataframe using shelve module
     
