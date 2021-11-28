@@ -13,7 +13,8 @@ python: 3.8.3
 pytorch: 1.6.0
 sklearn: 0.23.1
 numpy: 1.18.5
-panadas: 1.0.5
+pandas: 1.0.5
+pandas_profiling: 3.1.0
 """
 
 import re
@@ -24,8 +25,8 @@ from sklearn.impute import KNNImputer
 
 
 # data folder  path
-#dataPath = "./data/"
-dataPath = "C:/Users/ivan_/Desktop/UDEMY/GitHub/Machine_Learning_Projects/Titanic_MachineLearning_from_Disaster/data/"
+dataPath = "./data/"
+#dataPath = "C:/Users/ivan_/Desktop/UDEMY/GitHub/Machine_Learning_Projects/Titanic_MachineLearning_from_Disaster/data/"
 
 def data_analysis(data, profile_mode = False, data_name = "data_train"):
     """ This is a function to perform a general analysis of the data.
@@ -221,7 +222,8 @@ if __name__ == "__main__":
     
     # Lets build a syntetic feature
     data_train["SibPar"] = data_train["SibSp"]*data_train["Parch"]
-    
+    # Save the dataframe
+    #data_train.to_csv(dataPath+"train_syntetic.csv",index=False)
     # Data Pre-preproccessed profile
     data_analysis(data_train, profile_mode=True, data_name="data_train_processed")
     
