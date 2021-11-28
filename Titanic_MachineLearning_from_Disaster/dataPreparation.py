@@ -24,7 +24,8 @@ from sklearn.impute import KNNImputer
 
 
 # data folder  path
-dataPath = "./data/"
+#dataPath = "./data/"
+dataPath = "C:/Users/ivan_/Desktop/UDEMY/GitHub/Machine_Learning_Projects/Titanic_MachineLearning_from_Disaster/data/"
 
 def data_analysis(data, profile_mode = False, data_name = "data_train"):
     """ This is a function to perform a general analysis of the data.
@@ -105,16 +106,17 @@ def missing_values(data,col,features,n_neighbors=5,weights='uniform',metric='nan
     """
         
     imputer = KNNImputer(n_neighbors=n_neighbors, weights=weights, metric=metric,**kwargs)
+    
+    features = [col] + features
         
-    X = data[[col] + features]    
+    X = data[features]    
     y = data[col]
     
-    new_cols = [col] + features
-    X = X[new_cols]
+    X = X[features]
     
     data[col] = imputer.fit_transform(X, y)
     
-
+    
 
 def object_to_categorical_or_numerical(data,col,order=None,toCode=True):
     
@@ -156,8 +158,29 @@ def to_save_to_load(data,path,save=True):
             shelve_obj["data"] = data
         else:
             return shelve_obj["data"] 
-            
 
+
+
+def transform_ticket(data):
+    def get_city(ticket):
+        city = "".join(re.findall("[A-Za-z]",ticket)).strip()
+        if city:
+            return city
+        else:
+            return "Nan"
+    
+    data_train["Ticket-label"] = data_train["Ticket"].apply(lambda ticket: get_city(ticket)) 
+    
+    def get_ticket(ticket):
+        ticket = "".join(re.findall("[0-9]",ticket))
+        
+        if ticket:
+            return ticket
+        else:
+            return "0"
+        
+    data_train["Ticket"] = data_train["Ticket"].apply(lambda ticket: get_ticket(ticket)).astype("int64")
+    
 
 if __name__ == "__main__":
     data_train = pd.read_csv(dataPath+"train.csv",encoding="latin-1",low_memory=False)
@@ -179,13 +202,29 @@ if __name__ == "__main__":
     
     # lets cast object columns to categorical
     object_to_categorical_or_numerical(data_train, "Sex")
-    # We have to input two missing values of Embarked, the missing values are coded 
-    # as -1.
     object_to_categorical_or_numerical(data_train, "Embarked") 
 
     # using Pclass, Parch, Fare, Sex, Survived and Title_Name to predict Age
     missing_values(data_train,'Age',['Survived', 'Pclass', 'Sex', 'Parch', 'Fare', 'Title_Name'],
                    n_neighbors=5,weights='uniform',metric='nan_euclidean')
+    
+    # using Pclass, Fare, Sex, Survived and Title_Name to predict embarked
+    missing_values(data_train,'Embarked',['Survived', 'Pclass', 'Sex', 'Fare', 'Title_Name'],
+                   n_neighbors=5,weights='uniform',metric='nan_euclidean', missing_values=-1)
+    
+    # Handling ticket column
+    transform_ticket(data_train)
+    object_to_categorical_or_numerical(data_train, "Ticket-label")
+    
+    # Drop Cabin
+    data_train.drop(["Cabin"],axis=1,inplace=True)
+    
+    # Lets build a syntetic feature
+    data_train["SibPar"] = data_train["SibSp"]*data_train["Parch"]
+    
+    # Data Pre-preproccessed profile
+    data_analysis(data_train, profile_mode=True, data_name="data_train_processed")
+    
     
     
     """ To save a dataframe
@@ -194,8 +233,6 @@ if __name__ == "__main__":
             Example: data_train = to_save_to_load(None,dataPath+"data_frame.db",save=False)
     """
                     
-        
-    
         
     # Tasks
         # data description. (dtypes,missing values,unique values, etc) --> beto
@@ -215,6 +252,7 @@ if __name__ == "__main__":
     	-- 4) Data Cleaning Using Pandas (soruce: https://www.analyticsvidhya.com/blog/2021/06/data-cleaning-using-pandas/)
     	-- 5) Data Cleaning with Python and Pandas: Detecting Missing Values (soruce https://towardsdatascience.com/data-cleaning-with-python-and-pandas-detecting-missing-values-3e9c6ebcf78b)  
         -- 6) knn for imputing missing values (source: https://machinelearningmastery.com/knn-imputation-for-missing-values-in-machine-learning/)
+        -- 7) Feature Crosses (source: https://developers.google.com/machine-learning/crash-course/feature-crosses/video-lecture)
     """
     
     
