@@ -2,7 +2,7 @@
 """
 Created on Wed Nov 24 13:20:32 2021
     
-     This is a .py file for data analysys and visiaulization.
+     This is a .py file for data analysis and visualization.
      The objetive of this file is to get insights about the data 
      and the the problem.
 
