@@ -25,8 +25,8 @@ from sklearn.impute import KNNImputer
 
 
 # data folder  path
-dataPath = "./data/"
-#dataPath = "C:/Users/ivan_/Desktop/UDEMY/GitHub/Machine_Learning_Projects/Titanic_MachineLearning_from_Disaster/data/"
+#dataPath = "./data/"
+dataPath = "C:/Users/ivan_/Desktop/UDEMY/GitHub/Machine_Learning_Projects/Titanic_MachineLearning_from_Disaster/data/"
 
 def data_analysis(data, profile_mode = False, data_name = "data_train"):
     """ This is a function to perform a general analysis of the data.
@@ -212,6 +212,8 @@ if __name__ == "__main__":
     # using Pclass, Fare, Sex, Survived and Title_Name to predict embarked
     missing_values(data_train,'Embarked',['Survived', 'Pclass', 'Sex', 'Fare', 'Title_Name'],
                    n_neighbors=5,weights='uniform',metric='nan_euclidean', missing_values=-1)
+    # cast dtype of embarked
+    data_train["Embarked"] = data_train["Embarked"].astype(int)
     
     # Handling ticket column
     transform_ticket(data_train)
@@ -222,8 +224,7 @@ if __name__ == "__main__":
     
     # Lets build a syntetic feature
     data_train["SibPar"] = data_train["SibSp"]*data_train["Parch"]
-    # Save the dataframe
-    #data_train.to_csv(dataPath+"train_syntetic.csv",index=False)
+    
     # Data Pre-preproccessed profile
     data_analysis(data_train, profile_mode=True, data_name="data_train_processed")
     
