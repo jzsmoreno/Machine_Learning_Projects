@@ -226,8 +226,10 @@ if __name__ == "__main__":
     data_train["SibPar"] = data_train["SibSp"]*data_train["Parch"]
     
     # Data Pre-preproccessed profile
-    data_analysis(data_train, profile_mode=True, data_name="data_train_processed")
+    #data_analysis(data_train, profile_mode=True, data_name="data_train_processed")
     
+    # Lets save the dataFrame
+    to_save_or_load(data_train,dataPath+"data_frame.db",save=True)
     
     
     """ To save a dataframe
