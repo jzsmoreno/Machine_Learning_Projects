@@ -225,6 +225,12 @@ if __name__ == "__main__":
     # Lets build a syntetic feature
     data_train["SibPar"] = data_train["SibSp"]*data_train["Parch"]
     
+    # Lets build a syntetic feature 
+    child_age = data_train[data_train.Title_Name.isin([4])]["Age"].quantile([0.75]).values[0]
+    # 0 WOMAN
+    cond = (data_train.Age <= child_age) | (data_train.Sex == 0)
+    data_train["IsChildWoman"] = cond*1
+    
     # Data Pre-preproccessed profile
     #data_analysis(data_train, profile_mode=True, data_name="data_train_processed")
     
