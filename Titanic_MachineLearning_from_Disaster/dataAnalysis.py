@@ -19,8 +19,8 @@ import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
 from dataPreparation import to_save_or_load
 
-#dataPath = "./data/"
-dataPath = "C:/Users/ivan_/Desktop/UDEMY/GitHub/Machine_Learning_Projects/Titanic_MachineLearning_from_Disaster/data/"
+dataPath = "./data/"
+#dataPath = "C:/Users/ivan_/Desktop/UDEMY/GitHub/Machine_Learning_Projects/Titanic_MachineLearning_from_Disaster/data/"
 
 
 def RadViz(data, features, target, title,save=False):
@@ -129,6 +129,8 @@ if __name__ == "__main__":
     fig, axes = plt.subplots(4,2, figsize=(10,12), sharex=True, sharey=False)
     fig.suptitle('Mean of each feature with respect to survived')
     pie_forFeatures(survived_description_mean,axes,features[1:],save=True)
+    
+    
     
     
     """ Some useful insights about the pie graphs
