@@ -36,8 +36,8 @@ import xgboost as xgb
 from sklearn.metrics import confusion_matrix
 
 
-dataPath = "./data/"
-#dataPath = "C:/Users/ivan_/Desktop/UDEMY/GitHub/Machine_Learning_Projects/Titanic_MachineLearning_from_Disaster/data/"
+#dataPath = "./data/"
+dataPath = "C:/Users/ivan_/Desktop/UDEMY/GitHub/Machine_Learning_Projects/Titanic_MachineLearning_from_Disaster/data/"
 
 
 def accuracy(model,x,y):
@@ -149,7 +149,7 @@ if __name__ == "__main__":
     # Visualization of the first desicion tree
     feature_names = x_train.columns
     figsize=(12,7)
-    plot_tree_(Decission_Tree1,feature_names,figsize,save=True)
+    plot_tree_(Decission_Tree1,feature_names,figsize,save=False)
     
     accT_DT_1 = accuracy(Decission_Tree1,x_train,y_train)
     accV_DT_1 = accuracy(Decission_Tree1,x_val,y_val)
@@ -172,7 +172,7 @@ if __name__ == "__main__":
     
     # plot the importance features of Random Forest 1
     title = "Feature_importance-RF1"
-    plot_f_importance_model(f_importance_rf1,title,save=True)
+    plot_f_importance_model(f_importance_rf1,title,save=False)
     # Lets remove low important features
     # As it can see, Parch feature has 0.008801 of importance, in relation 
     # with the other features, it is low value, we drop it. 
@@ -194,11 +194,11 @@ if __name__ == "__main__":
     
     # plot the importance features of random forest 2
     title = "Feature_importance-RF2"
-    plot_f_importance_model(f_importance_rf2,title,save=True)
+    plot_f_importance_model(f_importance_rf2,title,save=False)
 
     # Lets remove Redundant Features
     title = "Dendogram-RF2"
-    getDendrogram(x_train_Parch,title,save=True)
+    getDendrogram(x_train_Parch,title,save=False)
     
     # Lets check out SibPar and SibSp and their effect in performance
     origin = get_oob(x_train_Parch, y_train)
@@ -226,12 +226,21 @@ if __name__ == "__main__":
     
     # plot the importance features of random forest 3
     title = "Feature_importance-RF3"
-    plot_f_importance_model(f_importance_rf3,title,save=True)
+    plot_f_importance_model(f_importance_rf3,title,save=False)
     
     # Analysing Data Lakage
     title = "RF3"
     features = ["IsChildWoman","Ticket","Fare","Sex","Age"]
-    plot_partial_dependence_(Random_Forest3,title,x_val_SibPar,features,save=True)
+    plot_partial_dependence_(Random_Forest3,title,x_val_SibPar,features,save=False)
+    
+    data_train = pd.concat([x_train_SibPar,y_train],axis=1)
+    data_val = pd.concat([x_val_SibPar,y_val],axis=1)
+
+    
+    to_save_or_load(data_train,dataPath+"data_train_final.db",save=True)
+    to_save_or_load(data_val,dataPath+"data_val_final.db",save=True)
+
+    
     # Begin ensemble training
     print('-----------------------------------------------------------')
     print('Ensemble results :')
