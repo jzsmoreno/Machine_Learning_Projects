@@ -25,8 +25,8 @@ from sklearn.impute import KNNImputer
 
 
 # data folder  path
-#dataPath = "./data/"
-dataPath = "C:/Users/ivan_/Desktop/UDEMY/GitHub/Machine_Learning_Projects/Titanic_MachineLearning_from_Disaster/data/"
+dataPath = "./data/"
+#dataPath = "C:/Users/ivan_/Desktop/UDEMY/GitHub/Machine_Learning_Projects/Titanic_MachineLearning_from_Disaster/data/"
 
 def data_analysis(data, profile_mode = False, data_name = "data_train"):
     """ This is a function to perform a general analysis of the data.
