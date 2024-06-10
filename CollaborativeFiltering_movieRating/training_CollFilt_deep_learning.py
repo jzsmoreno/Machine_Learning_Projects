@@ -1,32 +1,30 @@
 # -*- coding: utf-8 -*-
 """
 Created on Sat Nov 27 16:43:34 2021
-
     This is .py to train a deep learning model for collaborative Filtering
 
-author: Jorge Ivan Avalos Lopez
+author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno 
 python: 3.8.3
 pytorch: 1.6.0
 sklearn: 0.23.1
 """
 
+import math
 
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader
-from moviesDataset import movieDataset, ToTensor
 from CollaborativeFiltering import CollFilt
-from torch.utils.data import Dataset, DataLoader
-from torch.optim import lr_scheduler, Adam
+from moviesDataset import ToTensor, movieDataset
+from torch.optim import Adam, lr_scheduler
+from torch.utils.data import DataLoader, Dataset
 from training_CollFilt import train_model
-import math
 
 
 class CollFiltDNN(nn.Module):
-    """DNN initialisation
+    """DNN initialization
     Args:
-        input_dim (Int): Input dimension
-        dict_arch (dict): DNN architecture
+        input_dim (int): Input dimension.
+        dict_arch (dict): DNN architecture.
     """
 
     def __init__(self, n_users, n_movies, n_factors, dict_arch, output_range):
@@ -56,7 +54,6 @@ class CollFiltDNN(nn.Module):
 
     """ Forward pass
         Args (torch.Tensor) : Tensor input
-    
     """
 
     def forward(self, t_input):

@@ -1,23 +1,20 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Nov 26 13:15:56 2021
+    This is .py to do inference of the CollFilt model, also it shows some analysis 
 
-    This is .py to do inference of the CollFilt model, also 
-    it shows some analysys 
-
-author: Jorge Ivan Avalos Lopez
+author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno 
 python: 3.8.3
 pytorch: 1.6.0
 sklearn: 0.23.1
 """
 
-import torch
-from moviesDataset import movieDataset, ToTensor
-from CollaborativeFiltering import CollFilt
-from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import numpy as np
-
+import torch
+from CollaborativeFiltering import CollFilt
+from moviesDataset import ToTensor, movieDataset
+from sklearn.decomposition import PCA
 
 if __name__ == "__main__":
     dataPath = "./Data/ratings.db"
@@ -35,7 +32,7 @@ if __name__ == "__main__":
     model = CollFilt(n_users, n_movies, n_factors, output_range).to(device)
     model.load_state_dict(torch.load("./data/CollFilt"))
 
-    # Let´s do some inference
+    # Let's do some inference
     # get user 195
     userMovies, ratings = data_train[:]
     data = torch.cat(
@@ -49,16 +46,15 @@ if __name__ == "__main__":
     # get some sample of user195MoviesNotSeen
     size = len(user195MoviesNotSeen)
     sample = np.random.choice(user195MoviesNotSeen, size=int(0.2 * size), replace=False)
-    # let´s predict ratings not made by the user 195
+    # let's predict ratings not made by the user 195
     sample_user195 = torch.cat(
         (torch.tensor([195] * len(sample))[:, None], torch.tensor(sample)[:, None]), dim=1
     ).to(device)
     with torch.no_grad():
         pred_ratings_user195 = torch.round(model(sample_user195)).to(torch.long)
-
-        # Lets see the two strongest PCA componenets of the movie embedding matrix
+        # Let's see the two strongest PCA componenets of the movie embedding matrix
         embedding_movie = model.movie_factors
-        # lets sample some movies
+        # let's sample some movies
         sample_movie = np.random.choice(
             list(moviesId), size=int(0.05 * len(moviesId)), replace=False
         )
@@ -69,7 +65,7 @@ if __name__ == "__main__":
     movies = data_train._ratings[["Movie", "Title"]]
     moviesTitles = movies[movies.Movie.isin(sample_movie)].drop_duplicates()
 
-    # Lets visualize each movie
+    # Let's visualize each movie
     fig, ax = plt.subplots(figsize=(12, 12))
     ax.set_xlabel("Principal Component 1", fontsize=15)
     ax.set_ylabel("Principal Component 2", fontsize=15)

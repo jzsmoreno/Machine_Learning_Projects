@@ -1,44 +1,37 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Nov 24 13:32:11 2021
-    
-    This is a .py file that builds, trains and evaluates a decision tree and 
-    random forest
+Created on Wed Nov 24 13:32:11 2021 
+    This is a .py file that builds, trains and evaluates a decision tree and random forest
 
 python: 3.8.3
 pytorch: 1.6.0
 sklearn: 0.23.1
 numpy: 1.18.5
-panadas: 1.0.5
+pandas: 1.0.5
 yellowbrick : 1.3.post1
 xgboost: 1.5.1
 """
 
-import pandas as pd
 import matplotlib.pyplot as plt
-from dataPreparation import to_save_or_load
-from sklearn.tree import DecisionTreeClassifier, plot_tree
-from sklearn.model_selection import train_test_split
-from sklearn.inspection import plot_partial_dependence
-from sklearn.ensemble import RandomForestClassifier
-from scipy.spatial.distance import pdist
-from scipy.cluster.hierarchy import linkage, dendrogram
-
-# ------------------------------------------------------------------------------
-from sklearn import model_selection
-from sklearn.model_selection import train_test_split
-from sklearn.dummy import DummyClassifier
-from sklearn.linear_model import LogisticRegression
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.naive_bayes import GaussianNB
-from sklearn.svm import SVC
-from yellowbrick.classifier import ROCAUC
+import pandas as pd
 import xgboost as xgb
+from dataPreparation import to_save_or_load
+from scipy.cluster.hierarchy import dendrogram, linkage
+from scipy.spatial.distance import pdist
+from sklearn import model_selection
+from sklearn.dummy import DummyClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.inspection import plot_partial_dependence
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import confusion_matrix
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.svm import SVC
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+from yellowbrick.classifier import ROCAUC
 
-
-# dataPath = "./data/"
-dataPath = "C:/Users/ivan_/Desktop/UDEMY/GitHub/Machine_Learning_Projects/Titanic_MachineLearning_from_Disaster/data/"
+dataPath = "./data/"
 
 
 def accuracy(model, x, y):
@@ -119,8 +112,10 @@ def getDendrogram(
     **kwargs,
 ):
     x_t = x.T
-    c_dist = pdist(x_t)  # compute the distance
-    c_link = linkage(x_t, metric="correlation", method="complete")  # computing the linkage
+    # compute the distance
+    c_dist = pdist(x_t)
+    # computing the linkage
+    c_link = linkage(x_t, metric="correlation", method="complete")
     fig, ax = plt.subplots(figsize=figsize)
     fig.suptitle(title)
     dendrogram(c_link, labels=list(x_train_Parch.columns), orientation="left", ax=ax, **kwargs)
@@ -154,7 +149,7 @@ def ensemble(y_train, y_val, x_train, x_val):
         s = model_selection.cross_val_score(
             cls, x_train, y_train.values.ravel(), scoring="accuracy", cv=kfold
         )
-        # Traing the model
+        # traing the model
         cls.fit(x_train, y_train)
         print(
             f"{model.__name__:22} AUC: "
@@ -176,26 +171,26 @@ if __name__ == "__main__":
         data["Survived"],
     )
 
-    # Split train and validation set (20% of validation)
+    # split train and validation set (20% of validation)
     x_train, x_val, y_train, y_val = train_test_split(
         x_data, y_data, test_size=0.2, random_state=643
     )
 
-    # Lets train and evaluate the first Decision Tree
+    # Let's train and evaluate the first DecisionTreeClassifier
     Decission_Tree1 = DecisionTreeClassifier(max_leaf_nodes=7)
     Decission_Tree1.fit(x_train, y_train)
 
-    # Visualization of the first desicion tree
+    # Visualization of the first DecisionTreeClassifier
     feature_names = x_train.columns
     figsize = (12, 7)
     plot_tree_(Decission_Tree1, feature_names, figsize, save=False)
 
     accT_DT_1 = accuracy(Decission_Tree1, x_train, y_train)
     accV_DT_1 = accuracy(Decission_Tree1, x_val, y_val)
-    print("Decission Tree 1 : Train ACCU : {:.3f}".format(accT_DT_1))
-    print("Decission Tree 1 : Valid ACCU : {:.2f}".format(accV_DT_1))
+    print("DecissionTree 1 : Train ACCU : {:.3f}".format(accT_DT_1))
+    print("DecissionTree 1 : Valid ACCU : {:.2f}".format(accV_DT_1))
 
-    # Lets Train and evaluate the first random forest
+    # Let's train and evaluate the first RandomForest
     max_samples = int(len(y_train) * 0.7)
     Random_Forest1 = random_forest(
         x_train, y_train, max_samples=max_samples, class_weight="balanced_subsample"
@@ -203,45 +198,45 @@ if __name__ == "__main__":
 
     accT_RF_1 = accuracy(Random_Forest1, x_train, y_train)
     accV_RF_1 = accuracy(Random_Forest1, x_val, y_val)
-    print("Random Forest 1 : Train ACCU : {:.3f}".format(accT_RF_1))
-    print("Random Forest 1 : Valid ACCU : {:.3f}".format(accV_RF_1))
+    print("RandomForest 1 : Train ACCU : {:.3f}".format(accT_RF_1))
+    print("RandomForest 1 : Valid ACCU : {:.3f}".format(accV_RF_1))
 
-    # Check the importance features
+    # check the importance features
     f_importance_rf1 = f_importances_model(Random_Forest1, x_train)
     f_importance_rf1
 
-    # plot the importance features of Random Forest 1
+    # plot the importance features of RandomForest 1
     title = "Feature_importance-RF1"
     plot_f_importance_model(f_importance_rf1, title, save=False)
-    # Lets remove low important features
-    # As it can see, Parch feature has 0.008801 of importance, in relation
+    # Let's remove low important features
+    # As we can see, Parch feature has 0.008801 of importance, in relation
     # with the other features, it is low value, we drop it.
     x_train_Parch = x_train.drop(["Parch"], axis=1)
     x_val_Parch = x_val.drop(["Parch"], axis=1)
 
-    # Lets Train and evaluate the second random forest
+    # Let's train and evaluate the second RandomForest
     Random_Forest2 = random_forest(
         x_train_Parch, y_train, max_samples=max_samples, class_weight="balanced_subsample"
     )
 
     accT_RF_2 = accuracy(Random_Forest2, x_train_Parch, y_train)
     accV_RF_2 = accuracy(Random_Forest2, x_val_Parch, y_val)
-    print("Random Forest 2 : Train ACCU : {:.3f}".format(accT_RF_2))
-    print("Random Forest 2 : Valid ACCU : {:.3f}".format(accV_RF_2))
-    # we observe the performance improve for validation
+    print("RandomForest 2 : Train ACCU : {:.3f}".format(accT_RF_2))
+    print("RandomForest 2 : Valid ACCU : {:.3f}".format(accV_RF_2))
+    # the performance improve for validation
     # Check the importance features
     f_importance_rf2 = f_importances_model(Random_Forest2, x_train_Parch)
     f_importance_rf2
 
-    # plot the importance features of random forest 2
+    # plot the importance features of RandomForest 2
     title = "Feature_importance-RF2"
     plot_f_importance_model(f_importance_rf2, title, save=False)
 
-    # Lets remove Redundant Features
+    # Let's remove Redundant Features
     title = "Dendogram-RF2"
     getDendrogram(x_train_Parch, title, save=False)
 
-    # Lets check out SibPar and SibSp and their effect in performance
+    # Let's check out SibPar and SibSp and their effect in performance
     origin = get_oob(x_train_Parch, y_train)
     print("Random Forest 2 : oob score - Full features : {}".format(origin))
 
@@ -255,20 +250,20 @@ if __name__ == "__main__":
     x_train_SibPar = x_train_Parch.drop(["SibSp"], axis=1)
     x_val_SibPar = x_val_Parch.drop(["SibSp"], axis=1)
 
-    # Lets Train and evaluate the third random forest
+    # Let's train and evaluate the third RandomForest
     Random_Forest3 = random_forest(
         x_train_SibPar, y_train, max_samples=max_samples, class_weight="balanced_subsample"
     )
 
     accT_RF_3 = accuracy(Random_Forest3, x_train_SibPar, y_train)
     accV_RF_3 = accuracy(Random_Forest3, x_val_SibPar, y_val)
-    print("Random Forest 3 : Train ACCU : {:.3f}".format(accT_RF_3))
-    print("Random Forest 3 : Valid ACCU : {:.3f}".format(accV_RF_3))
-    # we observe the performance improve for validation
+    print("RandomForest 3 : Train ACCU : {:.3f}".format(accT_RF_3))
+    print("RandomForest 3 : Valid ACCU : {:.3f}".format(accV_RF_3))
+    # the performance improve for validation
     f_importance_rf3 = f_importances_model(Random_Forest3, x_train_SibPar)
     f_importance_rf3
 
-    # plot the importance features of random forest 3
+    # plot the importance features of RandomForest 3
     title = "Feature_importance-RF3"
     plot_f_importance_model(f_importance_rf3, title, save=False)
 

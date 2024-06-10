@@ -11,11 +11,12 @@ pytorch: 1.6.0
 sklearn: 0.23.1
 """
 
-import torch
-from torch.utils.data import Dataset, DataLoader
-from sklearn.model_selection import train_test_split
 import shelve
+
 import numpy as np
+import torch
+from sklearn.model_selection import train_test_split
+from torch.utils.data import DataLoader, Dataset
 
 
 class movieDataset(Dataset):

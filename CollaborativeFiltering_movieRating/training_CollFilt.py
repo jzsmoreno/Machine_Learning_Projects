@@ -4,20 +4,20 @@ Created on Tue Nov 23 14:15:59 2021
     
      This is .py file that creates the training of collaborative Filtering model 
 
-@author: Jorge Ivan Avalos Lopez
+@author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno 
 python: 3.8.3
 pytorch: 1.6.0
 sklearn: 0.23.1
 """
 
+import math
+
 import torch
 import torch.nn as nn
-from torch.utils.data import DataLoader
-from moviesDataset import movieDataset, ToTensor
 from CollaborativeFiltering import CollFilt
-from torch.utils.data import Dataset, DataLoader
-from torch.optim import lr_scheduler, Adam
-import math
+from moviesDataset import ToTensor, movieDataset
+from torch.optim import Adam, lr_scheduler
+from torch.utils.data import DataLoader, Dataset
 
 
 def train_model(
@@ -40,12 +40,12 @@ def train_model(
         data_test (torch.utils.data.Dataset) : a Dataset instance of the data train
         num_epochs (int) : number of training epochs
         batch_size (int) : number of batch size
-        device (string) : device type
+        device (str) : device type
     return:
         model (nn.Module) : Model trained
     """
 
-    # Build The DataLoader Object to make batches in training
+    # Build The DataLoader object to make batches in training
     trainloader = DataLoader(dataset=data_train, batch_size=batch_size, shuffle=True)
     valloader = DataLoader(dataset=data_val, batch_size=batch_size, shuffle=False)
 
@@ -69,11 +69,7 @@ def train_model(
             train_error += l.item()
             scheduler.step()
         train_error_avg = train_error / n_iterations_train
-        print(
-            "Train ------> epoch : {0}/{1}, loss : {2}".format(
-                epoch + 1, num_epochs, train_error_avg
-            )
-        )
+        print("Train -> epoch : {0}/{1}, loss : {2}".format(epoch + 1, num_epochs, train_error_avg))
         train_err.append(train_error_avg)
 
         with torch.no_grad():
@@ -86,9 +82,7 @@ def train_model(
 
             val_error_avg = val_error / n_iterations_val
             print(
-                "Test ------> epoch : {0}/{1}, loss : {2}".format(
-                    epoch + 1, num_epochs, val_error_avg
-                )
+                "Test -> epoch : {0}/{1}, loss : {2}".format(epoch + 1, num_epochs, val_error_avg)
             )
             val_err.append(val_error_avg)
 
@@ -104,7 +98,7 @@ if __name__ == "__main__":
     data_train = movieDataset(dataPath, transform=ToTensor(), split_data=split_data)
     data_val = movieDataset(dataPath, transform=ToTensor(), train=False, split_data=split_data)
 
-    # Hyperparameters of the CollFilt Model and its trainings
+    # Hyperparameters of the CollFilt Model and it's training
     n_users = data_train.n_users
     n_movies = data_train.n_movies
     n_factors = 50
@@ -148,5 +142,5 @@ if __name__ == "__main__":
         (userMovies[:, 0][:, None], userMovies[:, 1][:, None], ratings[:, None]), dim=1
     )
     user195 = data[data[:, 0] == 193].to(torch.int64).to(device)
-    # let´s predict ratings made by the user
+    # let's predict ratings made by the user
     pred_ratings_user193 = model_trained(user195[:, [0, 1]])

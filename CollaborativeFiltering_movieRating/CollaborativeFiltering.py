@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Nov 23 13:44:53 2021
-
     This is .py file that creates a collaborative Filtering model 
 
-
-@author: Jorge Ivan Avalos Lopez
+@author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno 
 python: 3.8.3
 pytorch: 1.6.0
 sklearn: 0.23.1
@@ -13,8 +11,8 @@ sklearn: 0.23.1
 
 import torch
 import torch.nn as nn
-from moviesDataset import movieDataset, ToTensor
-from torch.utils.data import Dataset, DataLoader
+from moviesDataset import ToTensor, movieDataset
+from torch.utils.data import DataLoader, Dataset
 
 
 class CollFilt(nn.Module):
