@@ -71,7 +71,6 @@ class movieDataset(Dataset):
 
 
 class ToTensor:
-
     """__call__ magic method to receive objects and transform them
 
     return:

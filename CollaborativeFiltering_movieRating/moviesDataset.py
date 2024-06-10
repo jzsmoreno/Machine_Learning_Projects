@@ -20,7 +20,6 @@ from torch.utils.data import DataLoader, Dataset
 
 
 class movieDataset(Dataset):
-
     """__init__ method creation
 
     Args:
@@ -98,7 +97,6 @@ class movieDataset(Dataset):
 
 
 class ToTensor:
-
     """__call__ magic method to recive objects and transform them
 
     Return:
