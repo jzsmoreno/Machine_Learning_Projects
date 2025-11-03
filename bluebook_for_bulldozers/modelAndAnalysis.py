@@ -23,7 +23,7 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.inspection import plot_partial_dependence
 from sklearn.tree import DecisionTreeRegressor, plot_tree
 
-""" Definition of root mean squered log error
+""" Definition of root mean squared log error
     Args:
         model (object): Model trained
         x_data : (DataFrame): Independent data

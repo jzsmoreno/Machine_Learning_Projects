@@ -123,7 +123,6 @@ if __name__ == "__main__":
         print(x_train.shape, y_train.shape, type(x_train), type(y_train))
         break
 
-    print()
     # Run the batches
     for x_test, y_test in testloader:
         print(x_test.shape, y_test.shape, type(x_test.shape), type(y_test))
