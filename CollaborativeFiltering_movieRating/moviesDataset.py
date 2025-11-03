@@ -2,7 +2,7 @@
 """
 Created on Tue Nov 23 12:00:42 2021
 
-    This is a .py file that has the Dataset class to feed into 
+    This is a .py file that has the Dataset class to feed into
     a DataLoader
 
 @author: Jorge Ivan Avalos Lopez

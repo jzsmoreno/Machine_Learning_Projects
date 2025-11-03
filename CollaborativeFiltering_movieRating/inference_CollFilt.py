@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Fri Nov 26 13:15:56 2021
-    This is .py to do inference of the CollFilt model, also it shows some analysis 
+    This is .py to do inference of the CollFilt model, also it shows some analysis
 
-author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno 
+author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno
 python: 3.8.3
 pytorch: 1.6.0
 sklearn: 0.23.1

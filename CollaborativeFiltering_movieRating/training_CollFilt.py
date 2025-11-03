@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Nov 23 14:15:59 2021
-    
-     This is .py file that creates the training of collaborative Filtering model 
 
-@author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno 
+     This is .py file that creates the training of collaborative Filtering model
+
+@author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno
 python: 3.8.3
 pytorch: 1.6.0
 sklearn: 0.23.1

@@ -3,7 +3,7 @@
 Created on Sat Nov 27 16:43:34 2021
     This is .py to train a deep learning model for collaborative Filtering
 
-author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno 
+author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno
 python: 3.8.3
 pytorch: 1.6.0
 sklearn: 0.23.1

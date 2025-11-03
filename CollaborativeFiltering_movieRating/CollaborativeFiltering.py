@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Nov 23 13:44:53 2021
-    This is .py file that creates a collaborative Filtering model 
+    This is .py file that creates a collaborative Filtering model
 
-@author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno 
+@author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno
 python: 3.8.3
 pytorch: 1.6.0
 sklearn: 0.23.1

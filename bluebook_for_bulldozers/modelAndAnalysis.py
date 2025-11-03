@@ -6,7 +6,7 @@ Created on Wed Nov 17 16:01:30 2021
     Also, it shows some analysis.
     The dataset that it will use is TrainAndValid.csv form kaggle.com
 
-@author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno 
+@author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno
 python: 3.8.3
 pytorch: 1.6.0
 sklearn: 0.23.1

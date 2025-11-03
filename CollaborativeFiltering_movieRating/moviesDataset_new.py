@@ -3,7 +3,7 @@
 Created on Tue Nov 23 12:00:42 2021
     This is a .py file that has the Dataset class to feed into a DataLoader
 
-@author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno 
+@author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno
 python: 3.8.3
 pytorch: 1.6.0
 sklearn: 0.23.1

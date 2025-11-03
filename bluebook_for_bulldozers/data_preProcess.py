@@ -3,10 +3,10 @@
 Created on Fri Nov 19 07:48:51 2021
 
     This a .py file that pre-process and transform the Blue Book Bulldozers
-    dataset. This is a replication and modification from the chapter 9 of the 
+    dataset. This is a replication and modification from the chapter 9 of the
     book deep learning for coders with fastai and pytorch (without using fastai library)
 
-@author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno 
+@author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno
 python: 3.8.3
 pytorch: 1.6.0
 sklearn: 0.23.1

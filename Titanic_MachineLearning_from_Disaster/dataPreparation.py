@@ -3,7 +3,7 @@
 Created on Wed Nov 24 13:30:16 2021
     This is a .py file for data preparation in order to train a machine learning model properly.
     To check the data and information: https://www.kaggle.com/c/titanic/data
-     
+
 @authors: Jorge Ivan Avalos Lopez & Jose Alberto Moreno Guerra
 
 python: 3.8.3

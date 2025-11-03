@@ -3,7 +3,7 @@
 Created on Tue Nov 23 08:33:29 2021
     This is a .py file that reads and describes the u.data and u.item datasets
 
-@author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno 
+@author: Jorge Ivan Avalos Lopez & Jose Alberto Moreno
 """
 
 import shelve
